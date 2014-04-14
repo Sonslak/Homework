@@ -6,7 +6,6 @@
 });
 
 
-
 $('#people').on('click', '.person', function (event) {
 
 
@@ -15,14 +14,10 @@ $('#people').on('click', '.person', function (event) {
   
     if ($("#click-enabled").attr('value') == "true")
     {
-        //$("#click-enabled").attr('value', "false");
+        $("#click-enabled").attr('value', "false");
 
         var that = $(this);
-
-        console.log($("#prev-id").attr('value'));
-
         var prev = $("#" + $("#prev-id").attr('value'));
-   
 
         // set image
         that.children('img').attr('src', that.attr('data-img'));
@@ -54,19 +49,15 @@ $('#people').on('click', '.person', function (event) {
 
         }
         else
-        {
-          
+        {        
             $("#click-enabled").attr('value', "true");
 
             // set prev clicked
             prev.attr('value', that.attr('id'));
         }
-
    
-        $("#prev-id").attr('value', $(this).attr('id'));
-       
+        $("#prev-id").attr('value', $(this).attr('id'));     
     }
-
 });
 
 
@@ -104,7 +95,7 @@ function getImages() {
             var suffleArr = shuffleArray(arr);
             $.each(suffleArr, function (index, value) {
                 
-                $("#people").append($("<li><a id=" + index + " class='person' data-img=" + value + " href='#'><img src='img/peek.png'></img></a></li>"));
+                $("#people").append($("<li><a id=" + index + " class='person' data-img=" + value + " href='#'><img width='100%' src='img/peek.png'></img></a></li>"));
             });
 
         }
