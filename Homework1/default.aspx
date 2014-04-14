@@ -12,7 +12,7 @@
     <ul id="people">
     </ul>
 
-    <input type="hidden" id="prev-clicked-id" value="0" />
+    <input type="hidden" id="prev-id" value="0" />
     <input type="hidden" id="click-count" value="0" />
     <input type="hidden" id="click-enabled" value="true" />
 

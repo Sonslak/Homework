@@ -15,10 +15,13 @@ $('#people').on('click', '.person', function (event) {
   
     if ($("#click-enabled").attr('value') == "true")
     {
-        $("#click-enabled").attr('value', "false");
+        //$("#click-enabled").attr('value', "false");
 
         var that = $(this);
-        var prev = $("#" + $("#prev-clicked-id").attr('value'));
+
+        console.log($("#prev-id").attr('value'));
+
+        var prev = $("#" + $("#prev-id").attr('value'));
    
 
         // set image
@@ -29,22 +32,38 @@ $('#people').on('click', '.person', function (event) {
         counter++;
         $("#click-count").attr('value', counter);
 
+        //// values
+        console.log("current:" + that.attr("data-img"));
+        console.log("prev: " + prev.attr('value') + " " + prev.children('img').attr("src"));
+
         if (counter >= 2)
         {
-            if (that.attr("data-img") == prev.children('img').attr("src")) {
-                that.children('img').addClass('matched');
-                prev.children('img').addClass('matched');
+            if (counter == 2) {
+              
+                if (that.attr("data-img") == prev.children('img').attr("src")) {
+
+                    that.children('img').addClass('matched');
+                    prev.children('img').addClass('matched');
+                }
             }
-            setTimeout('resetAll()', 500);
-        }
-        else
-        {
+
             // set prev clicked
             prev.attr('value', that.attr('id'));
 
+            setTimeout('resetAll()', 500);
+
+        }
+        else
+        {
+          
             $("#click-enabled").attr('value', "true");
+
+            // set prev clicked
+            prev.attr('value', that.attr('id'));
         }
 
+   
+        $("#prev-id").attr('value', $(this).attr('id'));
        
     }
 
