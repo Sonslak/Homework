@@ -1,7 +1,7 @@
 ﻿body {
     background-color:#52A2D9 ;
     line-height: 1;
-    font: 62.5%/1.7em Verdana, Helvetica, sans-serif;
+   font-family:Verdana;
     color: #fefefe;
     height: 100%;
     -webkit-font-smoothing: subpixel-antialiased;
@@ -23,14 +23,13 @@ ul {
      background-color:#fefefe;
      padding:0;
      padding-left:5px;
-     padding-top:5px;
-    
+     padding-top:5px;    
 }
 
 h1 {
     padding: 5px;
-    font-size: 2.7em;
-    line-height: 1em;
+    font-size: 1.2em;
+    
     letter-spacing: 0;
     color: #fff;
     text-transform: uppercase;
@@ -38,9 +37,8 @@ h1 {
 
 h2 {
     padding: 5x;
-    font-size: 2.0em; 
-    line-height: 1em;
-    letter-spacing: 0;
+    font-size: 0.9em; 
+     letter-spacing: 0;
     color: #fff;
     text-transform: uppercase;
 }
