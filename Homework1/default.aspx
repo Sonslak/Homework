@@ -15,6 +15,7 @@
          <h2><label id="timer" data-seconds="0" ></label></h2>
 
         <input type="button" value="Start Game" id="btnStartGame" onclick="startGame()" />
+        <input type="button" value="Stop Game"class="hide" id="btnStopGame" onclick="stopGame()" />
         <ul id="people" class="hide">
         </ul>
         

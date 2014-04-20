@@ -4,6 +4,7 @@ function startGame() {
 
     // change text
     $("#btnStartGame").prop('value', 'Restart Game');
+    $("#btnStopGame").removeClass("hide");
 
     // get all images in folder
     $("#people").html("");
@@ -14,6 +15,14 @@ function startGame() {
 
     // start timer
     handle = setInterval(function () {modifyTimer()}, 1000);
+}
+
+function stopGame() {
+    $("#people").addClass("hide");
+    $("#btnStopGame").addClass("hide");
+    $("#btnStartGame").prop('value', 'Start Game');
+    $("#timer").html("");
+    clearInterval(handle);
 }
 
 function modifyTimer() {
