@@ -44,7 +44,7 @@
         }
 
         h2 {
-            padding: 5x;
+            padding: 5px;
             font-size: 0.9em;
             letter-spacing: 0;
             color: #fff;
@@ -71,12 +71,13 @@
         <h2><label id="timer"></label></h2>
         <input type="button" value="Start Game" id="btnStartGame"/>
         <input type="button" value="Stop Game" class="hide" id="btnStopGame" />
-        <ul id="people" class="hide">
-        </ul>
+        <ul id="people" class="hide"></ul>
     </div>
    
     <!-- jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <%-- custom js --%>
     <script type="text/javascript">
 
         // global variables
@@ -125,18 +126,15 @@
                 {
                     prevImg = currentImg;
                     enabledImages = true;
-                }
-                
+                }     
             }
         }
 
         function resetAllImages() {
-            $("#people").find("img").map(function () {
-                if (!$(this).hasClass('matched')) {
-                    $(this).attr('src', "img/peek.png");
-                }
-            })
+            // switch unmatched back to hidden
+            $("#people").find("img").map(function () {if ($(this).hasClass('unmatched')) {$(this).attr('src', "img/peek.png");}})
 
+            // reset counters
             prevImg = "";
             clickCounter = 0;
             enabledImages = true;
@@ -146,7 +144,7 @@
             // timer
             $("#timer").removeClass("hide");
             clearInterval(timerHandle);
-            count = 0;
+            milliseconds = 0;
 
             // stop button
             $("#btnStopGame").removeClass("hide");
@@ -157,6 +155,7 @@
             getImages();
         }
 
+        // stops the game and hides elements
         function stopGame() {
             clearInterval(timerHandle);
             $("#people").addClass("hide");
@@ -165,6 +164,7 @@
             $("#btnStartGame").removeClass("hide");
         }
 
+        // the game timer
         function timer() {
             if ($('.unmatched').length > 0) {
                 milliseconds++;
@@ -176,9 +176,9 @@
             }
         }
 
+        // gets all the images in the folder
         function getImages() {
-            $.ajax({
-                //This will retrieve the contents of the folder if the folder is configured as 'browsable'
+            $.ajax({             
                 url: getRootURL() + "/img/memory-game",
                 success: function (data) {
                     var arr = [];
@@ -189,11 +189,11 @@
                         arr.push(this.href);
                     });
 
+                    // clear the container
                     $("#people").html("");
-                    // shuffle
-                    var suffleArr = shuffleArray(arr);
-                    $.each(suffleArr, function (index, value) {
 
+                    // shuffle the array & populate container
+                    $.each(shuffleArray(arr), function (index, value) {
                         $("#people").append($("<li><a id=" + index + " class='person' data-img=" + value + " href='#'><img width='100%' class='unmatched' src='img/peek.png'></img></a></li>"));
                     });
 
@@ -203,17 +203,19 @@
             });
         };
 
-        function shuffleArray(array) {
-            for (var i = array.length - 1; i > 0; i--) {
+
+        // shuffle a array
+        function shuffleArray(arr) {
+            for (var i = arr.length - 1; i > 0; i--) {
                 var j = Math.floor(Math.random() * (i + 1));
-                var temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
+                var temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
-            return array;
+            return arr;
         };
 
-
+        // get website root
         function getRootURL() {
             var baseURL = location.href;
             var rootURL = baseURL.substring(0, baseURL.indexOf('/', 7));
@@ -231,3 +233,4 @@
     </script>
 </body>
 </html>
+
