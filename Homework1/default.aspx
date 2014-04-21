@@ -67,101 +67,68 @@
 </head>
 <body>
     <div class="container">
-        <h1>Cergis Memory Game</h1>
+        <h1>Memory Game</h1>
         <h2><label id="timer"></label></h2>
-        <input type="button" value="Start Game" id="btnStartGame" onclick="startGame()" />
-        <input type="button" value="Stop Game" class="hide" id="btnStopGame" onclick="stopGame()" />
+        <input type="button" value="Start Game" id="btnStartGame"/>
+        <input type="button" value="Stop Game" class="hide" id="btnStopGame" />
         <ul id="people" class="hide">
         </ul>
     </div>
-    <input type="hidden" id="prev-id" value="0" />
-    <input type="hidden" id="click-count" value="0" />
-    <input type="hidden" id="click-enabled" value="true" />
-
+   
     <!-- jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
+
+        // global variables
         var timerHandle;
         var milliseconds = 0;
+        var prevImg = ""
+        var clickCounter = "0"
+        var enabledImages = true;
 
-        function startGame() {
+        // events
+        $('#people').on('click', '.person', clickImage);
+        $("#btnStartGame").on("click", startGame);
+        $("#btnStopGame").on("click", stopGame);
 
-            // clear the timer
-            clearInterval(timerHandle);
-            count = 0;
-
-            // change text
-            $("#btnStartGame").prop('value', 'Restart Game');
-            $("#btnStopGame").removeClass("hide");
-
-            // get all images in folder
-            $("#people").html("");
-            $("#people").removeClass("hide");
-            getImages();
-        }
-
-        function stopGame() {
-            clearInterval(timerHandle);
-            $("#people").addClass("hide");
-            $("#btnStopGame").addClass("hide");
-            $("#btnStartGame").prop('value', 'Start Game');
-            $("#timer").html("");
-        }
-
-        function timer() {
-            if ($('.unmatched').length > 0) {
-                milliseconds++;
-                $("#timer").html(milliseconds / 100 + " secs");
-            }
-            else {
-                alert("Done!");
-                clearInterval(timerHandle);
-            }
-        }
-
-        $('#people').on('click', '.person', function (event) {
-
+        function clickImage(event) {
             // prevent default action
             event.preventDefault();
 
-            if ($("#click-enabled").attr('value') == "true") {
-                $("#click-enabled").attr('value', "false");
+            // disable click while comparing
+            if (enabledImages) {
+                enabledImages = false;
 
-                var that = $(this);
-                var prev = $("#" + $("#prev-id").attr('value'));
+                var currentImg = $(this);
 
                 // set image
-                that.children('img').attr('src', that.attr('data-img'));
+                currentImg.children('img').attr('src', currentImg.attr('data-img'));
 
-                // increase counter
-                var counter = $("#click-count").attr('value');
-                counter++;
-                $("#click-count").attr('value', counter);
-                if (counter >= 2) {
-                    if (counter == 2) {
-                        if (that.attr("data-img") == prev.children('img').attr("src")) {
-                            that.children('img').removeClass('unmatched');
-                            prev.children('img').removeClass('unmatched');
-                            that.children('img').addClass('matched');
-                            prev.children('img').addClass('matched');
-                        }
+                // increase counter  
+                clickCounter++;
+
+                // if two images selected, compare them
+                if (clickCounter == 2) {
+
+                    // if they match keep them open
+                    if (currentImg.attr("data-img") == prevImg.children('img').attr("src")) {
+                        currentImg.children('img').removeClass('unmatched');
+                        currentImg.children('img').addClass('matched');
+
+                        prevImg.children('img').removeClass('unmatched');
+                        prevImg.children('img').addClass('matched');
                     }
 
-                    // set prev clicked
-                    prev.attr('value', that.attr('id'));
                     setTimeout('resetAllImages()', 500);
                 }
-                else {
-                    $("#click-enabled").attr('value', "true");
-
-                    // set prev clicked
-                    prev.attr('value', that.attr('id'));
+                else
+                {
+                    prevImg = currentImg;
+                    enabledImages = true;
                 }
-
-                $("#prev-id").attr('value', $(this).attr('id'));
+                
             }
-        });
-
+        }
 
         function resetAllImages() {
             $("#people").find("img").map(function () {
@@ -170,9 +137,43 @@
                 }
             })
 
-            $("#click-last").attr('value', "0");
-            $("#click-count").attr('value', "0");
-            $("#click-enabled").attr('value', "true");
+            prevImg = "";
+            clickCounter = 0;
+            enabledImages = true;
+        }
+
+        function startGame() {
+            // timer
+            $("#timer").removeClass("hide");
+            clearInterval(timerHandle);
+            count = 0;
+
+            // stop button
+            $("#btnStopGame").removeClass("hide");
+            $("#btnStartGame").addClass("hide");
+
+            // images
+            $("#people").removeClass("hide");
+            getImages();
+        }
+
+        function stopGame() {
+            clearInterval(timerHandle);
+            $("#people").addClass("hide");
+            $("#btnStopGame").addClass("hide");
+            $("#timer").addClass("hide");
+            $("#btnStartGame").removeClass("hide");
+        }
+
+        function timer() {
+            if ($('.unmatched').length > 0) {
+                milliseconds++;
+                $("#timer").html(milliseconds / 100 + " secs");
+            }
+            else {
+                clearInterval(timerHandle);
+                alert("Done!");
+            }
         }
 
         function getImages() {
@@ -180,9 +181,7 @@
                 //This will retrieve the contents of the folder if the folder is configured as 'browsable'
                 url: getRootURL() + "/img/memory-game",
                 success: function (data) {
-
                     var arr = [];
-
                     //get all images
                     $(data).find("a:contains('jpg')").each(function () {
                         // add twice to match
@@ -190,13 +189,13 @@
                         arr.push(this.href);
                     });
 
+                    $("#people").html("");
                     // shuffle
                     var suffleArr = shuffleArray(arr);
                     $.each(suffleArr, function (index, value) {
 
                         $("#people").append($("<li><a id=" + index + " class='person' data-img=" + value + " href='#'><img width='100%' class='unmatched' src='img/peek.png'></img></a></li>"));
                     });
-
 
                     // start timer
                     timerHandle = setInterval(timer, 10);
