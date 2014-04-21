@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Memory game</title>
+    <title>Goldfish or Elephant</title>
     <style type="text/css">
         body {
             background-color: #52A2D9;
@@ -67,7 +67,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Memory Game</h1>
+        <h1>Goldfish or Elephant</h1>
         <h2><label id="timer"></label></h2>
         <input type="button" value="Start Game" id="btnStartGame"/>
         <input type="button" value="Stop Game" class="hide" id="btnStopGame" />
@@ -150,9 +150,9 @@
             $("#btnStopGame").removeClass("hide");
             $("#btnStartGame").addClass("hide");
 
-            // images
-            $("#people").removeClass("hide");
+            // images     
             getImages();
+           
         }
 
         // stops the game and hides elements
@@ -199,6 +199,8 @@
 
                     // start timer
                     timerHandle = setInterval(timer, 10);
+
+                    $("#people").removeClass("hide");
                 }
             });
         };
