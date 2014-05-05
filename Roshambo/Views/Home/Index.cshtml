@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Roshambo";
+}
+
+<h2>Roshambo</h2>
+@using (Html.BeginForm("Play", "Home"))
+{
+    <input id="btnRock" type="submit" value="Rock" />
+    <input id="btnPaper" type="submit" value="Paper" />
+    <input id="btnScissors" type="submit" value="Scissors" />
+}
