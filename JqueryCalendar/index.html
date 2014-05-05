@@ -140,15 +140,6 @@
                 color: #ffffff;
             }
 
-                /*.calendar-container tr:first-child:hover td {
-            background: -o-linear-gradient(bottom, #005fbf 5%, #003f7f 100%);
-            background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #005fbf), color-stop(1, #003f7f) );
-            background: -moz-linear-gradient( center top, #005fbf 5%, #003f7f 100% );
-            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#005fbf", endColorstr="#003f7f");
-            background: -o-linear-gradient(top,#005fbf,003f7f);
-            background-color: #005fbf;
-        }*/
-
                 .calendar-container tr:first-child td:first-child {
                     border-width: 0px 0px 1px 0px;
                 }
@@ -196,7 +187,6 @@
         var nextBtn = $("#next");
         var prevBtn = $("#prev");
 
-
         // public functions
         base.init = function () { };
 
@@ -213,38 +203,54 @@
 
             $("#current-month").html(base.getMonthName(today.getMonth()) + " " + today.getFullYear());
 
-            calendarHtml = "<tr><td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td></tr>";
+            calendarHtml = "<tr><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td><td>Sun</td></tr>";
 
-            // row of week days sun-sat
+            var arrWeeks = [];
+
+            // weeks
             for (i = 0; i < 6; i++) {
-
-                calendarHtml += "<tr>";
-
-                // which dates to display and in which column
+                var arrDays = [];
+                // days
                 for (j = 0; j < 7; j++) {
-
-                    if ((i == 0 && j < firstDay.getDay()) || (day > daysInMonth)) {
-                        // this puts in blank cells at the beginning an end of the month
-                        calendarHtml += "<td>&nbsp;</td>";
+                    if ((i == 0 && j < firstDay.getDay()) || (day > daysInMonth)) {    
+                        arrDays[j] = '0'                     
                     }
                     else {
-
-                        if (day == today.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
-                            // display the date for this cell
-                            calendarHtml += "<td class='today'>" + day + "</td>";
-                        }
-                        else {
-                            // display the date for this cell
-                            calendarHtml += "<td>" + day + "</td>";
-                        }
+                        arrDays[j] = day;
                         // increment day counter
                         day++;
                     }
                 }
 
+                arrWeeks[i] = arrDays;
+
                 // end of row; determine if more rows needed
-                calendarHtml += "</tr>";
                 if (day > daysInMonth) {i = 6;}
+            }
+
+            // days
+            for (j = 0; j < arrWeeks.length; j++) {
+
+                calendarHtml += "<tr>";
+
+                for (i = 0; i < arrWeeks[j].length ; i++) {    
+                    if (arrWeeks[j][i] == 0) {
+                        // this puts in blank cells at the beginning an end of the month
+                        calendarHtml += "<td>&nbsp;</td>";
+                    }
+                    else{
+                        if (arrWeeks[j][i] == today.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
+                            // display the date for this cell
+                            calendarHtml += "<td class='today'>" + arrWeeks[j][i] + "</td>";
+                        }
+                        else {
+                            // display the date for this cell
+                            calendarHtml += "<td>" + arrWeeks[j][i] + "</td>";
+                        }
+                    }
+                }
+
+                calendarHtml += "</tr>"
             }
 
             $("#calendar").html(calendarHtml);
