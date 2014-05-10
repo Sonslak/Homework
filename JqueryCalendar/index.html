@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Javascript Calendar</title>
-
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans" />
     <style type="text/css">
         body {
@@ -44,6 +43,13 @@
             background-color: #005fbf;
             color: white;
             font-weight: 200;
+        }
+
+        .calendar td.other-days {
+            background-color: #CDCCE0;
+            font-weight: 200;
+            cursor: pointer;
+            cursor: hand;
         }
 
         .calendar-container {
@@ -160,9 +166,7 @@
         <div style="clear:both"></div>
         <div class="calendar-container">
             <table id="calendar" class="calendar"></table>
-
         </div>
-
     </div>
 </body>
 </html>
@@ -174,11 +178,12 @@
 
     $(document).ready(function () {
         var cal = new Calendar();
-        cal.init();
         cal.renderCalendar(new Date());
 
         $("#next").on("click", function () { cal.showNextMonth(event); });
         $("#prev").on("click", function () { cal.showPrevMonth(event); });
+
+        $('#calendar').on('click', '.other-days', function () { cal.showDate($(this).attr('data-date')); });
     });
 
 
@@ -187,21 +192,21 @@
         var nextBtn = $("#next");
         var prevBtn = $("#prev");
 
-        // public functions
-        base.init = function () { };
-
         base.renderCalendar = function (today) {
-
-            // variables      
+            // variables
             var daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()
             var currentDate = new Date();
             var weeks = [];
             var day = 1;
 
-            // get the first day of the month
+            // first day of the month
             var firstDay = new Date(today);
             firstDay.setDate(1);
-            var firstDow = firstDay.getDay()-1;
+            var firstDow = firstDay.getDay() - 1;
+
+            // last day of month
+            var lastDay = new Date(today);
+            lastDay.setDate(daysInMonth);
 
             // set current date
             $("#current-date").html(base.getMonthName(today.getMonth()) + " " + today.getFullYear());
@@ -209,14 +214,21 @@
             // header
             calendarHtml = "<tr><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td><td>Sun</td></tr>";
 
-            // weeks    
-            for (week = 0; week < 5; week++) {       
+            // weeks
+            for (week = 0; week < 6; week++) {
                 calendarHtml += "<tr>";
                 // days
                 for (dow = 0; dow < 7; dow++) {
-                    if ((week == 0 && dow < firstDow) || (day > daysInMonth)) {
-                        // this puts in blank cells at the beginning an end of the month
-                        calendarHtml += "<td>&nbsp;</td>";
+                    if (week == 0 && dow < firstDow) {
+                        var d = new Date(firstDay);
+                        d.setDate(d.getDate() - (firstDow - dow));
+                        calendarHtml += "<td class='other-days' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + d.getDate() + "</td>";
+                    }
+                    else if (day > daysInMonth) {
+                        var d = new Date(lastDay);
+                        d.setDate(d.getDate() + (day - daysInMonth));
+                        calendarHtml += "<td class='other-days' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + d.getDate() + "</td>";
+                        day++;
                     }
                     else {
                         if (day == today.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
@@ -225,31 +237,34 @@
                         }
                         else {
                             // display the date for this cell
-                            calendarHtml += "<td>" +day + "</td>";
+                            calendarHtml += "<td>" + day + "</td>";
                         }
                         // increment day counter
                         day++;
                     }
                 }
- 
+
                 calendarHtml += "</tr>"
 
                 // end of row; determine if more rows needed
-                if (day > daysInMonth) { i = 6; }
+                if (day > daysInMonth) { week = 6; }
             }
 
             $("#calendar").html(calendarHtml);
 
-            var nextMonth = new Date();
-            nextMonth.setMonth(today.getMonth() + 1);
+
+            // set next month
+            var nextMonth = new Date(today);
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
             nextBtn.attr('data-date', $.datepicker.formatDate('dd/mm/yy', nextMonth));
 
-            var prevMonth = new Date();
-            prevMonth.setMonth(today.getMonth() - 1);
+            // set prev month
+            var prevMonth = new Date(today);
+            prevMonth.setMonth(prevMonth.getMonth() - 1);
             prevBtn.attr('data-date', $.datepicker.formatDate('dd/mm/yy', prevMonth));
         };
 
-    
+
         base.getMonthName = function (month) {
             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             return months[month];
@@ -260,6 +275,13 @@
         };
 
         // events
+        base.showDate = function (date) {
+            //event.preventDefault();
+            base.renderCalendar($.datepicker.parseDate('dd/mm/yy', date));
+        };
+
+
+
         base.showNextMonth = function (event) {
             event.preventDefault();
             base.renderCalendar($.datepicker.parseDate('dd/mm/yy', nextBtn.attr('data-date')));
