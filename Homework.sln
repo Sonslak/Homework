@@ -24,6 +24,27 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "GoldfishorElephant", "http:
 		SlnRelativePath = "GoldfishorElephant\"
 	EndProjectSection
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "JqueryCalendar", "http://localhost:58298", "{4926E760-445F-421F-A632-F5F05AEB83D4}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_58298"
+		Debug.AspNetCompiler.PhysicalPath = "JqueryCalendar\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_58298\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_58298"
+		Release.AspNetCompiler.PhysicalPath = "JqueryCalendar\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_58298\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "JqueryCalendar\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +55,10 @@ Global
 		{2901BC6E-DD44-4A69-ACAF-7FEFB9202A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2901BC6E-DD44-4A69-ACAF-7FEFB9202A2C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{2901BC6E-DD44-4A69-ACAF-7FEFB9202A2C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{4926E760-445F-421F-A632-F5F05AEB83D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4926E760-445F-421F-A632-F5F05AEB83D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4926E760-445F-421F-A632-F5F05AEB83D4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{4926E760-445F-421F-A632-F5F05AEB83D4}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
