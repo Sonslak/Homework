@@ -9,6 +9,17 @@
             font-size: 12px;
         }
 
+        a#current-date {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        a#current-date:hover {
+            text-decoration:underline;
+        }
+
         div.container {
             text-align: center;
         }
@@ -19,25 +30,30 @@
             margin-right: auto;
         }
 
-            div.buttons div#current-date {
+            div.buttons div#month {
                 width: 50%;
                 float: left;
                 padding-bottom: 3px;
             }
 
-            div.buttons a#next {
-                width: 25%;
-                float: left;
-                padding-bottom: 3px;
-                text-align: right;
-            }
 
-            div.buttons a#prev {
+            div.buttons a#next, div.buttons a#prev {
                 width: 25%;
                 padding-bottom: 3px;
                 float: left;
                 text-align: left;
+                display: inline-block;
+                text-decoration: none;
             }
+
+            div.buttons a#next {
+                text-align: right;
+            }
+
+
+        div.clearer {
+            clear:both;
+        }
 
         .calendar td.today {
             background-color: #005fbf;
@@ -157,13 +173,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Javascript Calendar</h1>
+        <a href="#" id="current-date" class="show-month"></a> 
         <div class="buttons">
-            <a href="#" id="prev" data-date=""><< Prev</a>
-            <div id="current-date"></div>
-            <a href="#" id="next" data-date="">Next >></a>
+            <a href="#" id="prev" class="show-month" data-date=" "><<</a>
+            <div id="month"></div>
+            <a href="#" id="next" class="show-month" data-date="">>></a>
         </div>
-        <div style="clear:both"></div>
+        <div class="clearer"></div>
         <div class="calendar-container">
             <table id="calendar" class="calendar"></table>
         </div>
@@ -180,9 +196,7 @@
         var cal = new Calendar();
         cal.renderCalendar(new Date());
 
-        $("#next").on("click", function () { cal.showNextMonth(event); });
-        $("#prev").on("click", function () { cal.showPrevMonth(event); });
-
+        $('.show-month').on('click', function () { cal.showDate($(this).attr('data-date')); });
         $('#calendar').on('click', '.other-days', function () { cal.showDate($(this).attr('data-date')); });
     });
 
@@ -209,8 +223,10 @@
             lastDay.setDate(daysInMonth);
 
             // set current date
-            $("#current-date").html(base.getMonthName(today.getMonth()) + " " + today.getFullYear());
-
+            $("#month").html(base.getMonthName(today.getMonth()) + " " + today.getFullYear());
+            $("#current-date").html(base.getDateFormatted(currentDate));
+            $("#current-date").attr('data-date', $.datepicker.formatDate('dd/mm/yy', currentDate));
+   
             // header
             calendarHtml = "<tr><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td><td>Sun</td></tr>";
 
@@ -220,18 +236,21 @@
                 // days
                 for (dow = 0; dow < 7; dow++) {
                     if (week == 0 && dow < firstDow) {
+                        // prev month days
                         var d = new Date(firstDay);
                         d.setDate(d.getDate() - (firstDow - dow));
                         calendarHtml += "<td class='other-days' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + d.getDate() + "</td>";
                     }
                     else if (day > daysInMonth) {
+                        // next month days
                         var d = new Date(lastDay);
                         d.setDate(d.getDate() + (day - daysInMonth));
                         calendarHtml += "<td class='other-days' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + d.getDate() + "</td>";
                         day++;
                     }
                     else {
-                        if (day == today.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
+                        // current month days
+                        if (day == currentDate.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
                             // display the date for this cell
                             calendarHtml += "<td class='today'>" + day + "</td>";
                         }
@@ -252,7 +271,6 @@
 
             $("#calendar").html(calendarHtml);
 
-
             // set next month
             var nextMonth = new Date(today);
             nextMonth.setMonth(nextMonth.getMonth() + 1);
@@ -270,27 +288,31 @@
             return months[month];
         }
 
+        base.getDayName = function (day) {
+            var dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return dow[day];
+        }
+
+        base.getDateFormatted = function (date) {
+            var dd = base.getDayName(date.getDay());
+            var mm = base.getMonthName(date.getMonth() + 1);
+            var yyyy = date.getFullYear();
+
+            yyyy += (yyyy < 100) ? 1900 : 0
+            return dd + ", " + mm + " " + date.getDate() + ", " + yyyy
+        }
+
         base.log = function (message) {
             console.log(message);
         };
 
         // events
         base.showDate = function (date) {
-            //event.preventDefault();
+            event.preventDefault();
             base.renderCalendar($.datepicker.parseDate('dd/mm/yy', date));
         };
 
-
-
-        base.showNextMonth = function (event) {
-            event.preventDefault();
-            base.renderCalendar($.datepicker.parseDate('dd/mm/yy', nextBtn.attr('data-date')));
-        };
-
-        base.showPrevMonth = function (event) {
-            event.preventDefault();
-            base.renderCalendar($.datepicker.parseDate('dd/mm/yy', prevBtn.attr('data-date')));
-        };
+       
 
 
     }
