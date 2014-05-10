@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Javascript Calendar</title>
+    <title>Calendar</title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open Sans" />
     <style type="text/css">
         body {
@@ -10,10 +10,11 @@
         }
 
         a#current-date {
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 10px;
             display: inline-block;
             text-decoration: none;
+            font-weight:700;
         }
 
         a#current-date:hover {
@@ -55,8 +56,27 @@
             clear:both;
         }
 
+
+        div#message {
+          margin-top:20px;
+          font-weight:700;
+          font-size:14px;
+        }
+
+
+        .calendar td {
+            cursor: pointer;
+            cursor: hand;
+        }
+
         .calendar td.today {
             background-color: #005fbf;
+            color: white;
+            font-weight: 200;
+        }
+
+        .calendar td.selected {
+            background-color:#7C32A1;
             color: white;
             font-weight: 200;
         }
@@ -64,8 +84,7 @@
         .calendar td.other-days {
             background-color: #CDCCE0;
             font-weight: 200;
-            cursor: pointer;
-            cursor: hand;
+            
         }
 
         .calendar-container {
@@ -183,6 +202,7 @@
         <div class="calendar-container">
             <table id="calendar" class="calendar"></table>
         </div>
+        <div id="message"></div>
     </div>
 </body>
 </html>
@@ -196,18 +216,22 @@
         var cal = new Calendar();
         cal.renderCalendar(new Date());
 
+        $('#calendar').on('click', '.days', function () { cal.selectDate($(this)); });
         $('.show-month').on('click', function () { cal.showDate($(this).attr('data-date')); });
         $('#calendar').on('click', '.other-days', function () { cal.showDate($(this).attr('data-date')); });
     });
 
 
     function Calendar() {
+
+        /* Variables */
         var base = this;
         var nextBtn = $("#next");
         var prevBtn = $("#prev");
 
+        /* Functions */
         base.renderCalendar = function (today) {
-            // variables
+            // some local variables
             var daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()
             var currentDate = new Date();
             var weeks = [];
@@ -250,13 +274,15 @@
                     }
                     else {
                         // current month days
+                        var d = new Date(today.getFullYear(), today.getMonth(), day)
+
                         if (day == currentDate.getDate() && currentDate.getMonth() == today.getMonth() && currentDate.getYear() == today.getYear()) {
                             // display the date for this cell
-                            calendarHtml += "<td class='today'>" + day + "</td>";
+                            calendarHtml += "<td class='today' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + day + "</td>";
                         }
                         else {
                             // display the date for this cell
-                            calendarHtml += "<td>" + day + "</td>";
+                            calendarHtml += "<td class='days' data-date=" + $.datepicker.formatDate('dd/mm/yy', d) + ">" + day + "</td>";
                         }
                         // increment day counter
                         day++;
@@ -264,7 +290,6 @@
                 }
 
                 calendarHtml += "</tr>"
-
                 // end of row; determine if more rows needed
                 if (day > daysInMonth) { week = 6; }
             }
@@ -282,17 +307,19 @@
             prevBtn.attr('data-date', $.datepicker.formatDate('dd/mm/yy', prevMonth));
         };
 
-
+        // month name
         base.getMonthName = function (month) {
             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             return months[month];
         }
 
+        // day of week name
         base.getDayName = function (day) {
             var dow = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             return dow[day];
         }
 
+        // formatted date
         base.getDateFormatted = function (date) {
             var dd = base.getDayName(date.getDay());
             var mm = base.getMonthName(date.getMonth() + 1);
@@ -302,19 +329,76 @@
             return dd + ", " + mm + " " + date.getDate() + ", " + yyyy
         }
 
+        // logging 
         base.log = function (message) {
             console.log(message);
         };
 
-        // events
+        base.getDayDiff = function (fromDate, toDate) {
+            var toTime = toDate.getTime();
+            var fromTime = fromDate.getTime();
+            return parseInt((toTime - fromTime) / (24 * 3600 * 1000));
+        }
+
+        base.getBusinessDayDiff = function (fromDate, toDate) {
+            var businessDays = 0;
+            for (day = 0; day < 100000000000000; day++) {
+                var d = new Date(fromDate);
+                d.setDate(d.getDate() + day);
+
+                if (d >= toDate)
+                { return businessDays; }
+
+                if (d.getDay() != 0 && d.getDay() != 6)
+                { businessDays += 1}
+            }
+        }
+
+        base.getBusinessHourDiff = function (fromDate, toDate) {
+            var businessHours = 0;
+            for (hour = 0; hour < 100000000000000; hour++) {
+                var d = new Date(fromDate);
+                d.setHours(d.getHours() + hour);
+
+                if (d > toDate)
+                { return businessHours; }
+
+                if (d.getDay() != 0 && d.getDay() != 6)
+                {
+                    if (d.getHours() > 9 && d.getHours()!= 13 && d.getHours() < 17)
+                    {
+                        businessHours += 1
+                    }
+                }
+            }
+        }
+
+        /* Events */
+        base.selectDate = function (selected) {
+            event.preventDefault();
+
+            var currentDate = new Date();
+            var selectedDate = $.datepicker.parseDate('dd/mm/yy', selected.attr('data-date'));
+            selectedDate.setHours(9)
+
+            $("#calendar td").removeClass("selected")
+            selected.addClass("selected")
+
+            var html = "";
+            if (selectedDate > currentDate) {
+                html += (base.getDayDiff(currentDate, selectedDate)+1) + " days away<br/>";
+                html += base.getBusinessDayDiff(currentDate, selectedDate) + " business day(s) away<br/>";
+                html += base.getBusinessHourDiff(currentDate, selectedDate) + " business hour(s) away";
+            }
+
+            $("#message").html(html);
+        };
+
+
         base.showDate = function (date) {
             event.preventDefault();
             base.renderCalendar($.datepicker.parseDate('dd/mm/yy', date));
         };
-
-       
-
-
     }
 
 </script>
