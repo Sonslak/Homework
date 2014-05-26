@@ -1,0 +1,30 @@
+﻿body {
+}
+
+#chat, #chatters  {
+    height:200px; 
+    overflow-wrap:break-word;
+    overflow-y:scroll;
+}
+
+#chatters
+{
+    width:200px;
+
+}
+
+#chat{ 
+    float:left;
+     width:400px;
+}
+
+ul{
+    padding:0px;
+    padding-left:5px;
+    margin:0px;
+}
+
+ul li {
+    text-decoration:none;
+    list-style-type:none;
+}

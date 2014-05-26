@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+<p>Please enter a username to join chat</p>
+@using (Html.BeginForm("LogIn", "Home"))
+{
+    <input type="text" name="Username" />
+    <input type="submit" name="login" value="login" class="btn btn-primary" />
+}
+
+
+

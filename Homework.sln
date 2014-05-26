@@ -45,6 +45,10 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "JqueryCalendar", "http://lo
 		SlnRelativePath = "JqueryCalendar\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "ChatApp\ChatApp.csproj", "{9158A1DE-8B00-4B74-A69B-7C6F81CBD2EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SportStore.WebUI", "..\SportStore\SportStore.WebUI\SportStore.WebUI.csproj", "{BE352913-2FDB-4E63-B940-0413DC01A5A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,14 @@ Global
 		{4926E760-445F-421F-A632-F5F05AEB83D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4926E760-445F-421F-A632-F5F05AEB83D4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{4926E760-445F-421F-A632-F5F05AEB83D4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{9158A1DE-8B00-4B74-A69B-7C6F81CBD2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9158A1DE-8B00-4B74-A69B-7C6F81CBD2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9158A1DE-8B00-4B74-A69B-7C6F81CBD2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9158A1DE-8B00-4B74-A69B-7C6F81CBD2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE352913-2FDB-4E63-B940-0413DC01A5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE352913-2FDB-4E63-B940-0413DC01A5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE352913-2FDB-4E63-B940-0413DC01A5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE352913-2FDB-4E63-B940-0413DC01A5A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

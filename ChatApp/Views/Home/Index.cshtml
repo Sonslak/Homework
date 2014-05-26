@@ -1,0 +1,46 @@
+﻿@model ChatApp.Models.ChatModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>Welcome @Model.Username</p>
+<div id="chat">
+    <ul>
+        @foreach (ChatApp.Code.Chat chat in Model.Chats)
+        {
+            <li>
+                @chat.DateAdded.ToString("hh:mm:ss"): @chat.Username: @chat.Message
+            </li>
+        }
+    </ul>
+</div>
+<div id="chatters">
+    <ul>  
+        @foreach (ChatApp.Code.Chatter chatter in Model.Chatters)
+        {
+            <li>
+                @chatter.Username 
+                @if(chatter.IsAway)
+                {
+                    <span>away</span>
+                }
+            </li>
+        }
+    </ul>
+</div>
+
+@using (Html.BeginForm("AddChat", "Home"))
+{
+   <input type="text" name="Message" id="txtMessage" />
+   <input type="submit" id="btnAddMessage" value="Add Message" class="btn btn-primary" />
+}
+@using (Html.BeginForm("Logout", "Home"))
+{
+    <input type="submit" id="btnLogout" value="Logout" />
+}
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/global.js")" type="text/javascript"></script>
+}
+
+
