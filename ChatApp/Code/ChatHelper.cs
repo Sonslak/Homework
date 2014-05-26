@@ -21,13 +21,13 @@ namespace ChatApp.Code
                 if (listings == null)
                 {
                     listings = new List<Chatter>();
-                    HttpContext.Current.Cache.Insert(ChattersCacheID, listings);
+                    HttpContext.Current.Cache.Insert(ChattersCacheID, listings, null, DateTime.MaxValue , new TimeSpan(1, 00, 0));
                 }
                 return listings;
             }
             set
             {
-                HttpContext.Current.Cache.Insert(ChattersCacheID, value);
+                HttpContext.Current.Cache.Insert(ChattersCacheID, value, null, DateTime.MaxValue, new TimeSpan(1, 00, 0));
             }
         }
 
@@ -38,13 +38,13 @@ namespace ChatApp.Code
                 if (listings == null)  
                 {
                     listings = new List<Chat>();
-                    HttpContext.Current.Cache.Insert(ChatsCacheID, listings);
+                    HttpContext.Current.Cache.Insert(ChatsCacheID, listings, null, DateTime.MaxValue, new TimeSpan(1, 00, 0));
                 }
                 return listings;
             }
             set
             {
-                HttpContext.Current.Cache.Insert(ChatsCacheID, value);
+                HttpContext.Current.Cache.Insert(ChatsCacheID, value, null, DateTime.MaxValue, new TimeSpan(1, 00, 0));
             }
         }
 
